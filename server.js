@@ -1,8 +1,14 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const allProducts = require('./data/products');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors());
 
 app.use(function(req, res, next){
     console.log(`${req.method} request for ${req.url}`);
@@ -20,7 +26,6 @@ app.get('/allProducts', function(req, res) {
 app.get('/product/:id', function(req, res) {
   let product;
   const productIdParam = req.params.id;
-  // res.send(productIdParam);
   for (var i = 0; i < allProducts.length; i++) {
     if (allProducts[i].id == productIdParam) {
       product = allProducts[i];
@@ -33,7 +38,6 @@ app.get('/product/:id', function(req, res) {
 app.get('/product/edit/:id', function(req, res) {
   let product;
   const productEditId = req.params.id;
-  // res.send(productIdParam);
   for (var i = 0; i < allProducts.length; i++) {
     if (allProducts[i].id == productEditId) {
       product = allProducts[i];
@@ -46,7 +50,6 @@ app.get('/product/edit/:id', function(req, res) {
 app.get('/product/delete/:id', function(req, res) {
   let product;
   const productDeleteId = req.params.id;
-  // res.send(productIdParam);
   for (var i = 0; i < allProducts.length; i++) {
     if (allProducts[i].id == productDeleteId) {
       product = allProducts[i];
@@ -58,6 +61,6 @@ app.get('/product/delete/:id', function(req, res) {
 
 
 app.listen(port, () => {
-    // console.clear();
+    console.clear();
     console.log(`application is running on port ${port}`)
 });
