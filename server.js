@@ -59,6 +59,15 @@ app.get('/product/delete/:id', function(req, res) {
   res.send(product);
 });
 
+app.post('/product', function(req, res) {
+  // console.log('there is a post request');
+  let product = {
+    name: req.body.name,
+    price: req.body.price,
+    message: 'We are about to send this product to a database'
+  }
+  res.send(product);
+});
 
 app.listen(port, () => {
     console.clear();
