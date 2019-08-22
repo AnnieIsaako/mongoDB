@@ -3,6 +3,18 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose'); // allows us to connect to mongoDB
+
+const config = require('./config'); // gets password of dbuser
+
+mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@anniescluster-qrhsv.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected
+  console.log('we\'re connected to mongo db');
+});
 
 const allProducts = require('./data/products');
 
@@ -59,15 +71,42 @@ app.get('/product/delete/:id', function(req, res) {
   res.send(product);
 });
 
+
+const Product = require('./models/products')
+
 app.post('/product', function(req, res) {
   // console.log('there is a post request');
-  let product = {
+  // let product = {
+  //   name: req.body.name,
+  //   price: req.body.price,
+  //   message: 'We are about to send this product to a database'
+  // }
+  // res.send(product);
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(), // creates a unique key
     name: req.body.name,
-    price: req.body.price,
-    message: 'We are about to send this product to a database'
-  }
-  res.send(product);
+    price: req.body.price
+  });
+  product.save().then(result => {
+    res.send(result);
+  })
+  .catch(err => res.send(err));
 });
+
+// make a new MODEL
+
+// app.post('/contact', function(req, res) {
+//   const contact = new Product ({
+//     fName: req.body.fName,
+//     lName: req.body.lName,
+//     email: req.body.email
+//   })
+//   res.send(contact);
+// })
+
+
+
+
 
 app.listen(port, () => {
     console.clear();
