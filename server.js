@@ -7,6 +7,7 @@ const mongoose = require('mongoose'); // allows us to connect to mongoDB
 
 const config = require('./config'); // gets password of dbuser
 
+const Product = require('./models/products');
 mongoose.connect(`mongodb+srv://${config.MONGO_USER}:${config.MONGO_PASSWORD}@anniescluster-qrhsv.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
@@ -32,22 +33,29 @@ app.get('/', function(req, res){
 });
 
 app.get('/allProducts', function(req, res) {
-  res.send(allProducts);
+  // res.send(allProducts);
+  Product.find().then(result => {
+    res.send(result);
+  })
 });
 
 app.get('/product/:id', function(req, res) {
-  let product;
-  const productIdParam = req.params.id;
-  for (var i = 0; i < allProducts.length; i++) {
-    if (allProducts[i].id == productIdParam) {
-      product = allProducts[i];
-      break;
-    }
-  }
-  res.send(product);
+  const id = req.params.id
+  // let product;
+  // const productIdParam = req.params.id;
+  // for (var i = 0; i < allProducts.length; i++) {
+  //   if (allProducts[i].id == productIdParam) {
+  //     product = allProducts[i];
+  //     break;
+  //   }
+  // }
+  // res.send(product);
+  Product.findById(id).then(result => {
+    res.send(result);
+  })
 });
 
-app.get('/product/edit/:id', function(req, res) {
+app.get('/product/edit/:_id', function(req, res) {
   let product;
   const productEditId = req.params.id;
   for (var i = 0; i < allProducts.length; i++) {
@@ -72,7 +80,7 @@ app.get('/product/delete/:id', function(req, res) {
 });
 
 
-const Product = require('./models/products');
+
 
 app.post('/product', function(req, res) {
   // console.log('there is a post request');
