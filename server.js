@@ -72,7 +72,7 @@ app.get('/product/delete/:id', function(req, res) {
 });
 
 
-const Product = require('./models/products')
+const Product = require('./models/products');
 
 app.post('/product', function(req, res) {
   // console.log('there is a post request');
@@ -94,21 +94,39 @@ app.post('/product', function(req, res) {
 });
 
 // make a new MODEL
+const Contact = require('./models/contact');
 
-// app.post('/contact', function(req, res) {
-//   const contact = new Product ({
-//     fName: req.body.fName,
-//     lName: req.body.lName,
-//     email: req.body.email
-//   })
-//   res.send(contact);
-// })
+app.post('/contact', function(req, res) {
+  const contact = new Contact ({
+    _id: new mongoose.Types.ObjectId(),
+    fName: req.body.fName,
+    lName: req.body.lName,
+    email: req.body.email
+  })
+  contact.save().then(result => {
+    res.send(result);
+  })
+})
 
+const Feedback = require('./models/feedback');
 
+app.post('/feedback', function(req, res) {
+  const feedback = new Feedback ({
+    _id: new mongoose.Types.ObjectId(),
+    shopName: req.body.shopName,
+    suburb: req.body.suburb,
+    postalCode: req.body.postalCode,
+    message: req.body.message,
+  })
+  contact.save().then(result => {
+    res.send(result);
+  })
+  // console.log(feedback);
+})
 
 
 
 app.listen(port, () => {
-    console.clear();
+    // console.clear();
     console.log(`application is running on port ${port}`)
 });
